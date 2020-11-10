@@ -5,9 +5,12 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import sii.utils.ListHelper;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class RecommendListViewController {
 
@@ -16,6 +19,32 @@ public class RecommendListViewController {
     private ObservableList<String> observableSportList = FXCollections.observableArrayList();
 
     private List<JSONObject> list;
+
+    private List<List<String>> groups = new ArrayList<>();
+
+    private Set<String> avoidSports = new HashSet<>();
+
+    public RecommendListViewController() {
+        List<String> firstGroup = new ArrayList<>();
+        firstGroup.add("Хоккей");
+        firstGroup.add("Бадминтон");
+        firstGroup.add("Дзюдо");
+        firstGroup.add("Джиу-джитсу");
+
+        List<String> secondGroup = new ArrayList<>();
+        secondGroup.add("Регби");
+        secondGroup.add("Футбол");
+        secondGroup.add("Волейбол");
+
+        List<String> thirdGroup = new ArrayList<>();
+        thirdGroup.add("Водное поло");
+        thirdGroup.add("Гандбол");
+        thirdGroup.add("Софтбол");
+
+        groups.add(firstGroup);
+        groups.add(secondGroup);
+        groups.add(thirdGroup);
+    }
 
     public void init(ListView<String> recommendListView) {
         this.recommendListView = recommendListView;
@@ -28,9 +57,9 @@ public class RecommendListViewController {
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonObject = jsonArray.getJSONObject(i);
             list.add(jsonObject);
-            System.out.println(jsonObject);
+//            System.out.println(jsonObject);
         }
-        System.out.println(jsonArray);
+//        System.out.println(jsonArray);
 
     }
 
@@ -51,5 +80,47 @@ public class RecommendListViewController {
         // TODO нужно самому сформировать группы
         // TODO потом выбрать все товары из этой группы
         // TODO а потом уже ранжировать по мерам близости
+        Set<String> recommendSports = getRecommendSport(selectedList);
+        ObservableList<String> observableSportList = FXCollections.observableArrayList();
+        observableSportList.addAll(recommendSports);
+        recommendListView.setItems(observableSportList);
+    }
+
+    private Set<String> getRecommendSport(List<String> selectedList) {
+//        List<String> recommendList = new ArrayList<>();
+        Set<String> recommendSports = new HashSet<>();
+
+        for (String selectedSport : selectedList) {
+            recommendSports.addAll(getRecommendSportsByOneSport(selectedSport));
+        }
+
+        recommendSports.removeAll(selectedList);
+
+        return recommendSports;
+    }
+
+    private Set<String> getRecommendSportsByOneSport(String selectedSport) {
+        Set<String> recommendSports = new HashSet<>();
+
+        for (List<String> group : groups) {
+            if (group.contains(selectedSport)) {
+                for (String sport : group) {
+                    if (!avoidSports.contains(sport)) {
+                        recommendSports.add(sport);
+                    }
+                }
+            }
+        }
+
+        return recommendSports;
+    }
+
+    public void dislike() {
+        String removedItem = ListHelper.removeItemIfSelected(recommendListView);
+        avoidSports.add(removedItem);
+    }
+
+    public void clear() {
+        recommendListView.getItems().clear();
     }
 }

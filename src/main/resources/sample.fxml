@@ -14,7 +14,8 @@
       <Button fx:id="submitButton" layoutX="319.0" layoutY="275.0" mnemonicParsing="false" onAction="#submit" text="Подтвердить" />
       <ListView fx:id="recommendListView" layoutX="510.0" layoutY="61.0" prefHeight="200.0" prefWidth="200.0" />
       <Label layoutX="560.0" layoutY="39.0" text="Рекомендации" />
-      <Button layoutX="558.0" layoutY="275.0" mnemonicParsing="false" text="Не нравится" />
-      <Button layoutX="291.0" layoutY="310.0" mnemonicParsing="false" text="Очистить полностью" />
+      <Button fx:id="dislikeButton" layoutX="558.0" layoutY="275.0" mnemonicParsing="false" onAction="#dislike" text="Не нравится" />
+      <Button fx:id="clearButton" layoutX="408.0" layoutY="352.0" mnemonicParsing="false" onAction="#clear" text="Очистить полностью" />
+      <Button fx:id="removeButton" layoutX="333.0" layoutY="313.0" mnemonicParsing="false" onAction="#remove" text="Удалить" />
    </children>
 </AnchorPane>
