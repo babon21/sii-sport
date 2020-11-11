@@ -5,12 +5,11 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import sii.model.Sport;
 import sii.utils.ListHelper;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class RecommendListViewController {
 
@@ -64,11 +63,17 @@ public class RecommendListViewController {
     }
 
     // TODO нужен ли этот метод? кажется да, но в конце реализации recommend функции
-    private List<JSONObject> getListBySport(String sport) {
-        List<JSONObject> resultList = new ArrayList<>();
+    private List<Sport> getListBySport(String sport) {
+        List<Sport> resultList = new ArrayList<>();
         for (JSONObject e : list) {
-            if (e.get("first") == sport || e.get("second") == sport) {
-                resultList.add(e);
+            if (e.getString("first").equals(sport)) {
+                if (!avoidSports.contains(e.getString("second"))) {
+                    resultList.add(new Sport(e.getString("second"), e.getDouble("euclid")));
+                }
+            } else if (e.getString("second").equals(sport)) {
+                if (!avoidSports.contains(e.getString("first"))) {
+                    resultList.add(new Sport(e.getString("first"), e.getDouble("euclid")));
+                }
             }
         }
 
@@ -76,43 +81,24 @@ public class RecommendListViewController {
     }
 
     public void recommend(List<String> selectedList) {
-//        getListBySport()
-        // TODO нужно самому сформировать группы
-        // TODO потом выбрать все товары из этой группы
-        // TODO а потом уже ранжировать по мерам близости
-        Set<String> recommendSports = getRecommendSport(selectedList);
-        ObservableList<String> observableSportList = FXCollections.observableArrayList();
-        observableSportList.addAll(recommendSports);
-        recommendListView.setItems(observableSportList);
-    }
-
-    private Set<String> getRecommendSport(List<String> selectedList) {
-//        List<String> recommendList = new ArrayList<>();
-        Set<String> recommendSports = new HashSet<>();
-
-        for (String selectedSport : selectedList) {
-            recommendSports.addAll(getRecommendSportsByOneSport(selectedSport));
+        Set<Sport> set = new LinkedHashSet<>();
+        for (String s : selectedList) {
+            List<Sport> list = getListBySport(s);
+            set.addAll(list);
         }
 
-        recommendSports.removeAll(selectedList);
+        List<Sport> sports = new ArrayList<>(set);
+        Collections.sort(sports);
+//        for (Sport s : sports) {
+//            System.out.println("Sport: " + s.getName() + ", measure: " + s.getProximityMeasure());
+//        }
 
-        return recommendSports;
-    }
+        Set<String> sportNameList = sports.stream().map(Sport::getName).collect(Collectors.toCollection(LinkedHashSet::new));
+//        for (String s : sportNameList) {
+//            System.out.println("Sport: " + s);
+//        }
 
-    private Set<String> getRecommendSportsByOneSport(String selectedSport) {
-        Set<String> recommendSports = new HashSet<>();
-
-        for (List<String> group : groups) {
-            if (group.contains(selectedSport)) {
-                for (String sport : group) {
-                    if (!avoidSports.contains(sport)) {
-                        recommendSports.add(sport);
-                    }
-                }
-            }
-        }
-
-        return recommendSports;
+        recommendListView.setItems(FXCollections.observableArrayList(sportNameList));
     }
 
     public void dislike() {
