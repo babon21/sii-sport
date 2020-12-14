@@ -54,6 +54,7 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
         recommendListViewController.init(recommendListView);
         selectedSportListViewController.init(selectedSportsListView);
         sportListViewController.init(sportListView, selectedSportListViewController);
