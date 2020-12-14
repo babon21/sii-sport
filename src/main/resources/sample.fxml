@@ -35,5 +35,8 @@
       <CheckBox layoutX="216.0" layoutY="119.0" mnemonicParsing="false" text="Олимпийский" />
       <Label layoutX="26.0" layoutY="41.0" text="Количество участников" />
       <Label layoutX="33.0" layoutY="79.0" text="Минимальный возраст" />
+      <Button layoutX="91.0" layoutY="149.0" mnemonicParsing="false" text="Поиск" />
+      <Button layoutX="172.0" layoutY="149.0" mnemonicParsing="false" text="Очистка черного списка" />
+      <Button layoutX="90.0" layoutY="192.0" mnemonicParsing="false" text="Сброс параметров" />
    </children>
 </AnchorPane>
