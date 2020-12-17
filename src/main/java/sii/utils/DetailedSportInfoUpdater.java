@@ -17,9 +17,6 @@ public class DetailedSportInfoUpdater {
     private Label isOlympicInfo;
 
     @FXML
-    private Label popularityInfo;
-
-    @FXML
     private Label countInfo;
 
     @FXML
@@ -30,7 +27,6 @@ public class DetailedSportInfoUpdater {
     public DetailedSportInfoUpdater(Label sportNameInfo, Label isOlympicInfo, Label popularityInfo, Label countInfo, Label ageInfo) {
         this.sportNameInfo = sportNameInfo;
         this.isOlympicInfo = isOlympicInfo;
-        this.popularityInfo = popularityInfo;
         this.countInfo = countInfo;
         this.ageInfo = ageInfo;
 
@@ -42,7 +38,6 @@ public class DetailedSportInfoUpdater {
         Sport sport = sports.get(sportName);
         sportNameInfo.setText(sport.getName());
         isOlympicInfo.setText(sport.isOlympic() ? "Да" : "Нет");
-        popularityInfo.setText(Long.toString(sport.getPopularity()));
         countInfo.setText(Long.toString(sport.getMinParticipants()));
         ageInfo.setText(Long.toString(sport.getMinAge()));
     }
