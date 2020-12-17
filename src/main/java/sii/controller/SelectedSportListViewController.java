@@ -4,6 +4,7 @@ package sii.controller;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
+import sii.utils.DetailedSportInfoUpdater;
 import sii.utils.ListHelper;
 
 import java.util.ArrayList;
@@ -14,8 +15,13 @@ public class SelectedSportListViewController {
     private ObservableList<String> observableSportList = FXCollections.observableArrayList();
     private ListView<String> selectedSportsListView;
 
-    public void init(ListView<String> selectedSportsListView) {
+    public void init(ListView<String> selectedSportsListView, DetailedSportInfoUpdater detailedSportInfoUpdater) {
         this.selectedSportsListView = selectedSportsListView;
+
+        selectedSportsListView.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
+                    detailedSportInfoUpdater.updateInfo(newValue);
+                }
+        );
     }
 
     public void updateSelectedList(String sport) {

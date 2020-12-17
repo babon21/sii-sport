@@ -6,6 +6,7 @@ import javafx.scene.control.ListView;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import sii.model.Sport;
+import sii.utils.DetailedSportInfoUpdater;
 import sii.utils.ListHelper;
 
 import java.util.*;
@@ -45,7 +46,7 @@ public class RecommendListViewController {
         groups.add(thirdGroup);
     }
 
-    public void init(ListView<String> recommendListView) {
+    public void init(ListView<String> recommendListView, DetailedSportInfoUpdater detailedSportInfoUpdater) {
         this.recommendListView = recommendListView;
         recommendListView.setItems(observableSportList);
 
@@ -60,6 +61,10 @@ public class RecommendListViewController {
         }
 //        System.out.println(jsonArray);
 
+        recommendListView.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
+                    detailedSportInfoUpdater.updateInfo(newValue);
+                }
+        );
     }
 
     // TODO нужен ли этот метод? кажется да, но в конце реализации recommend функции
